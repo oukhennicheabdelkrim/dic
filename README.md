@@ -1,18 +1,18 @@
 ﻿# _**﻿DiC**_ 
 
-DIC is a simple **dependency injection container** for php, allows developers to move object creation logic out of their application logic.
+DIC is a simple **dependency-injection container** for **php**, allows developers to move object-creation logic out of their application logic.
 
 [![Build Status](https://travis-ci.org/oukhennicheabdelkrim/DIC.svg?branch=master)](https://travis-ci.org/oukhennicheabdelkrim/DIC)
 [![Latest Stable Version](https://poser.pugx.org/oukhennicheabdelkrim/dic/v/stable)](https://packagist.org/packages/oukhennicheabdelkrim/dic)
 [![License](https://poser.pugx.org/oukhennicheabdelkrim/dic/license)](https://packagist.org/packages/oukhennicheabdelkrim/dic)
 
-This package is compliant with 
+This package is compatible with 
 [PSR-1](https://www.php-fig.org/psr/psr-1)
 [PSR-4](https://www.php-fig.org/psr/psr-4) and
 [PSR-11](https://www.php-fig.org/psr/psr-11), if you notice compliance oversights, please send me a patch via pull request.
 ## Requirements
 
-The following versions of PHP are supported by this version:
+The following versions of PHP are supported in this version:
 
 - PHP 7.0
 - PHP 7.1
@@ -30,7 +30,7 @@ $ vendor/bin/phpunit
 composer require oukhennicheabdelkrim/dic
 ````
 ### Simple usage 
-To create a container, simply instantiate the DIC class.
+To create a container, simply create an instance of the DIC class.
 
 ```
 <?php
@@ -44,7 +44,7 @@ $container = new DIC();
 ### Binding
 
 
-You can bind any object with a key using ```bind``` method ,then you can retrieve instances by reffering them through their key with ```get``` method.
+You can bind any object with a key using ```bind``` method ,then you can retrieve instances by reffering them with their key using ```get``` method.
 ```
 <?php
 
@@ -58,7 +58,7 @@ $myFoo = $container->get('myFoo');
 ````
 **Note** : bind method returns the current container.
 
-````get```` method creates a singleton instance by default, this means everytime you request for a dependency it will return the same instance.
+````get```` method creates a singleton instance by default, this means everytime you request a dependency it returns the same instance.
 
 ````
  $container = new DIC();
@@ -86,7 +86,8 @@ $container->bind('dbConnection',function($container){
 
 `````
 
-You can inject instance directly to bind it : 
+
+You can also directly inject instance to bind it:
 
 ```
  $container->bind('myFoo',new Foo());
@@ -107,7 +108,7 @@ You can also get a new instance using ```getFactory``` method
 ```
 ## Resolving instance automatically
 
-DIC can resolve any instantiable class without ```bind``` method, using the **real class:name** as a key in ```get``` and ```getFactory``` methods
+DIC can resolve any instantiable class without ```bind``` method, using the **real class:name** as as an argument in ```get``` and ```getFactory``` methods
 
 ##### Example 1
 ```
@@ -188,7 +189,7 @@ $myBar= $container->bind('myFoo',new Foo())
 
 ## has method
 
-```has``` method returns true if the container can return an entry for the given identifier, returns false otherwise.
+```has``` has method returns true if the container can return an entry for the given identifier, returns false otherwise.
 ```
 /* A class */
 class A{

@@ -1,7 +1,7 @@
 {
     "name": "oukhennicheabdelkrim/dic",
-    "description": "DIC is dependency injection container allows developers to move object creation logic out of their application logic.",
-    "keywords": ["simple","dependency injection container","php"],
+    "description": "DIC is dependency-injection container allows developers to move object creation logic out of their application logic.",
+    "keywords": ["Simple","Dependency-injection container","php"],
     "authors": [
         {
             "name": "Oukhenniche Abdelkrim",
