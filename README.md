@@ -108,7 +108,7 @@ You can also get a new instance using ```getFactory``` method
 ```
 ## Resolving instance automatically
 
-DIC can resolve any instantiable class without ```bind``` method, using the **real class:name** as as an argument in ```get``` and ```getFactory``` methods
+DIC can resolve any instantiable class without ```bind``` method, using the real ```class:name``` as an argument in ```get``` and ```getFactory``` methods
 
 ##### Example 1
 ```
@@ -182,14 +182,14 @@ var_dump($container->get('dbConnexion')); // singleton dbConnexion instance
 
 ##### Example:
 ```
-$myBar= $container->bind('myFoo',new Foo())
-          ->bind('myBar',new Bar($container->get('myFoo'));          
+$myBar = $container->bind('myFoo',new Foo())
+          ->bind('myBar',new Bar($container->get('myFoo'))->get('myBar');          
             
 ```
 
 ## has method
 
-```has``` has method returns true if the container can return an entry for the given identifier, returns false otherwise.
+```has``` method returns true if the container can return an entry for the given identifier, returns false otherwise.
 ```
 /* A class */
 class A{
