@@ -57,20 +57,20 @@ class DIC implements ContainerInterface
      *
      * @return bool
      */
-    public function has($id)
+    public function has($id):bool
     {
         return $this->resolver->canResolve($id);
     }
 
 
     /**
-     * set id  Instance
-     * @param $id
-     * @param  mixed
+     * bind resolve with id
+     * @param string $id
+     * @param  mixed $resolve
      * $resolve can be a callable to resolve the instance or any type
      */
 
-    public function bind($id, $resolve)
+    public function bind(string $id, $resolve)
     {
         $this->resolver->register($id,$resolve);
         return $this;
@@ -79,12 +79,12 @@ class DIC implements ContainerInterface
 
     /**
      * GET a new Instance
-     * @param $id
+     * @param string $id
      * @param  mixed
      * $resolve can be a callable to resolve the instance or any type
      */
 
-    public function getFactory($id)
+    public function getFactory(string $id)
     {
         return $this->resolver->resolve($id,false);
     }

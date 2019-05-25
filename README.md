@@ -7,7 +7,7 @@ DIC is a simple **dependency-injection container** for **php**, allows developer
 [![License](https://poser.pugx.org/oukhennicheabdelkrim/dic/license)](https://packagist.org/packages/oukhennicheabdelkrim/dic)
 
 This package is compatible with 
-[PSR-1](https://www.php-fig.org/psr/psr-1)
+[PSR-1](https://www.php-fig.org/psr/psr-1),
 [PSR-4](https://www.php-fig.org/psr/psr-4) and
 [PSR-11](https://www.php-fig.org/psr/psr-11), if you notice compliance oversights, please send me a patch via pull request.
 ## Requirements
