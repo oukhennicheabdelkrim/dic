@@ -8,6 +8,11 @@
 
 
 use PHPUnit\Framework\TestCase;
+use oukhennicheabdelkrim\DIC\DIC;
+require_once 'TestClass/Bar.php';
+require_once 'TestClass/Foo.php';
+require_once 'TestClass/Classes.php';
+
 class MultyContainersTest extends TestCase
 {
 

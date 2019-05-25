@@ -72,4 +72,12 @@ class FactoryTest extends TestCase
         $this->assertNotEquals($foo,$dic->getFactory('Foo'));
     }
 
+    public function testFactoryByDicInstnaceInjection()
+    {
+        $dic= new DIC();
+        $dic->bind('foo1',$dic->getFactory('Foo'));
+        $dic->bind('foo2',$dic->getFactory('Foo'));
+        $this->assertNotEquals($dic->get('foo1'),$dic->get('foo2'));
+    }
+
 }

@@ -35,9 +35,7 @@ class B
 }
 class C
 {
-    public function __construct()
-    {
-    }
+
 }
 class D
 {
@@ -54,3 +52,5 @@ class E
 
     }
 }
+
+class F{}
