@@ -25,7 +25,7 @@ class InstanceTest  extends TestCase
     {
         $dic= new DIC();
 
-        $dic->set('myBar',function ($dic){
+        $dic->bind('myBar',function ($dic){
             return new Bar($dic->get('Foo'));
         });
         $this->assertInstanceOf('Bar',$dic->get('myBar'));
@@ -36,7 +36,7 @@ class InstanceTest  extends TestCase
     {
         $dic= new DIC();
         $foo = new Foo();
-        $dic->set('myFoo',$foo);
+        $dic->bind('myFoo',$foo);
         $this->assertInstanceOf('Foo',$dic->get('myFoo'));
     }
 
@@ -44,7 +44,7 @@ class InstanceTest  extends TestCase
     {
         $dic= new DIC();
         $foo = new Foo();
-        $dic->set('myfoo',$foo);
+        $dic->bind('myfoo',$foo);
         $this->assertEquals($foo,$dic->get('myfoo'));
     }
 
@@ -68,10 +68,10 @@ class InstanceTest  extends TestCase
     public function testSingletonByAlias()
     {
         $dic= new DIC();
-        $dic->set('myFoo',function (){
+        $dic->bind('myFoo',function (){
             return new Foo();
 
-        })->set('MyBar',function ($dic){
+        })->bind('MyBar',function ($dic){
 
             return new Bar($dic->get('myFoo'));
         });

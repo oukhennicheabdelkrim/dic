@@ -40,7 +40,13 @@ class Resolver
         $this->container = $container;
     }
 
+    /**********************************************************************************
 
+     -> Public methods
+
+    /**********************************************************************************
+
+     *
     /**
      * Resolve
      * @param $id
@@ -48,6 +54,7 @@ class Resolver
      * return mixed (instance)
      * @throws NotFoundException
      */
+
     public function resolve($id, $cached = true)
     {
         $resolve = $this->getResolve($id);
@@ -66,6 +73,32 @@ class Resolver
     {
         $this->registredResolveStore[$id] = $resolve;
     }
+
+
+    /**
+     * @param $id
+     * @return bool
+     */
+    public function canResolve($id): bool
+    {
+        $resolve = $this->getResolve($id);
+        if (isset($resolve)) {
+            return true;
+        } else {
+            $reflectionClass = $this->getReflectionCalss($id);
+            return $reflectionClass !== null && $this->isInstanciable($reflectionClass);
+        }
+
+    }
+
+
+
+
+    /**********************************************************************************
+
+    -> Private methods
+
+    /**********************************************************************************
 
 
     /**
@@ -148,7 +181,7 @@ class Resolver
                         if (isset($type))
                             $params[] = $this->resolve($type->getName());
                         else
-                            $params[] = $reflectionParam->getDefaultValue();
+                            $params[] = $this->getDefaultValue($reflectionParam,$className);
                     }
                 }
                 return function () use ($reflectionClass, $params) {
@@ -178,6 +211,22 @@ class Resolver
 
     }
 
+    /**
+     * @param \ReflectionParameter $p
+     * @param $className
+     * @return mixed
+     * @throws Exceptions\NoDefaultParams
+     */
+    private function getDefaultValue (\ReflectionParameter $p, $className)
+    {
+        try{
+            return $p->getDefaultValue();
+        }
+        catch (\ReflectionException $e){
+            throw new Exceptions\NoDefaultParams("DIC Instantiation error :Can not found default value of '{$p->getName()}' parameter in constructor of '$className'.");
+        }
+    }
+
 
     /**
      * @param \ReflectionClass $reflectionClass
@@ -188,22 +237,6 @@ class Resolver
         return $reflectionClass->isInstantiable();
     }
 
-
-    /**
-     * @param $id
-     * @return bool
-     */
-    public function canResolve($id): bool
-    {
-        $resolve = $this->getResolve($id);
-        if (isset($resolve)) {
-            return true;
-        } else {
-            $reflectionClass = $this->getReflectionCalss($id);
-            return $reflectionClass !== null && $this->isInstanciable($reflectionClass);
-        }
-
-    }
 
     /**
      * @param $resolve

@@ -73,7 +73,7 @@ class DIC implements ContainerInterface
      * $resolve can be a callable to resolve the instance or any type
      */
 
-    public function set($id, $resolve)
+    public function bind($id, $resolve)
     {
         $this->resolver->register($id,$resolve);
         return $this;
