@@ -40,6 +40,15 @@ class InstanceTest  extends TestCase
         $this->assertInstanceOf('Foo',$dic->get('myFoo'));
     }
 
+    public function testInstanceOfByResolve()
+    {
+        $dic= new DIC();
+        $dic->bind('myFoo',function ($dic){
+            return $dic->get('Foo');
+        });
+        $this->assertInstanceOf('Foo',$dic->get('myFoo'));
+    }
+
     public function testEqualByInjection()
     {
         $dic= new DIC();
@@ -97,14 +106,6 @@ class InstanceTest  extends TestCase
     }
 
 
-    public function testSingletonAfterGettingFactory()
-    {
-        $dic= new DIC();
-        $bar0 = $dic->get('Bar');
-        $newbar = $dic->getFactory('Bar');
-        $bar1 = $dic->get('Bar');
-        $this->assertEquals($bar0,$bar1);
-    }
 
     /****************
 
