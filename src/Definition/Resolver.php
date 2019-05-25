@@ -51,9 +51,8 @@ class Resolver
     public function resolve($id, $cached = true)
     {
         $resolve = $this->getResolve($id);
-        if ($resolve!==null)
-            return $this->resolveRegistered($id, $cached);
-        $this->createResolve($id);
+        if ($resolve!==null) return $this->resolveRegistered($id, $cached);
+        $this->register($id,$this->createResolve($id));
         return $this->resolveRegistered($id, $cached);
     }
 
@@ -131,7 +130,7 @@ class Resolver
      * @param $className
      * @throws Exceptions\NotFoundException
      * @throws Exceptions\NotInstantiableExecption
-     * resolve any class
+     * create resolve
      */
 
     private function createResolve($className){
@@ -152,11 +151,9 @@ class Resolver
                             $params[] = $reflectionParam->getDefaultValue();
                     }
                 }
-
-                // register resolve
-                $this->register($className, function () use ($reflectionClass, $params) {
+                return function () use ($reflectionClass, $params) {
                     return $reflectionClass->newInstanceArgs($params);
-                });
+                };
 
             } else {
                 throw new Exceptions\NotInstantiableExecption("DIC : $className  is not instantiable");
