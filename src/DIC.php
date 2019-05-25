@@ -23,14 +23,11 @@ class DIC implements ContainerInterface
 
     /**
      * DIC constructor.
-     * @param ContainerInterface|null $container
      */
-    public function __construct(ContainerInterface $container=null)
+    public function __construct()
      {
-         if ($container===null)
-             $container=$this;
 
-         $this->resolver = new Resolver(new CacheInstance(),$container);
+         $this->resolver = new Resolver(new CacheInstance(),$this);
      }
 
     /**
