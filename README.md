@@ -9,9 +9,7 @@ DIC is a simple **dependency injection container** for php, allows developers to
 This package is compliant with 
 [PSR-1](https://www.php-fig.org/psr/psr-1)
 [PSR-4](https://www.php-fig.org/psr/psr-4) and
-[PSR-11](https://www.php-fig.org/psr/psr-11)
-
-. If you notice compliance oversights, please send me a patch via pull request.
+[PSR-11](https://www.php-fig.org/psr/psr-11), if you notice compliance oversights, please send me a patch via pull request.
 ## Requirements
 
 The following versions of PHP are supported by this version:
