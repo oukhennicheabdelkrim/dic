@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Kikim
- * Date: 25/05/2019
- * Time: 00:00
- */
+
 
 class Bar
 {
