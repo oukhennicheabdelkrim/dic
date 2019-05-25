@@ -8,9 +8,10 @@ use oukhennicheabdelkrim\DIC\Definition\Resolver;
 
 use Psr\Container\ContainerInterface;
 
+
 /**
- * Class Definition
- * @package oukhennicheabdelkrim\dependencyinjectioncontainer
+ * Class DIC
+ * @package oukhennicheabdelkrim\DIC
  */
 class DIC implements ContainerInterface
 {
@@ -20,7 +21,11 @@ class DIC implements ContainerInterface
      */
      private $resolver;
 
-     public function __construct(ContainerInterface $container=null)
+    /**
+     * DIC constructor.
+     * @param ContainerInterface|null $container
+     */
+    public function __construct(ContainerInterface $container=null)
      {
          if ($container===null)
              $container=$this;

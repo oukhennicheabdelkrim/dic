@@ -5,7 +5,7 @@ namespace oukhennicheabdelkrim\DIC\Definition;
 
 /**
  * Interface CacheInstanceInterface
- * @package oukhennicheabdelkrim\dependencyinjectioncontainer\Definition
+ * @package oukhennicheabdelkrim\DIC\Definition
  */
 interface CacheInstanceInterface
 {

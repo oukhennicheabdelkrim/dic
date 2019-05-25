@@ -217,7 +217,6 @@ class Resolver
         if (is_callable($resolve)) {
             return $resolve($this->container);
         } else {
-            echo '.';
             return $resolve;
         }
     }
