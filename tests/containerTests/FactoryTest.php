@@ -2,16 +2,22 @@
 
 namespace oukhennicheabdelkrim\DIC\tests\containerTests;
 
+use oukhennicheabdelkrim\DIC\DIC;
 use PHPUnit\Framework\TestCase;
-
-
-
 use Bar,Foo;
+
+require_once dirname(__DIR__).'/TestClass/bootstrap.php';
 
 class FactoryTest extends TestCase
 {
 
-    use TestableTrait;
+    private $container;
+
+    protected function setUp()
+    {
+        $this->container=new DIC();
+    }
+
     public function testFactory()
     {
         $bar1 = $this->container->getFactory('Bar');

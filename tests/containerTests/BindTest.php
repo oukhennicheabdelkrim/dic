@@ -4,14 +4,21 @@
 namespace oukhennicheabdelkrim\DIC\tests\containerTests;
 
 
+use oukhennicheabdelkrim\DIC\DIC;
 use PHPUnit\Framework\TestCase;
-
 use C,Foo,Bar;
+
+require_once dirname(__DIR__).'/TestClass/bootstrap.php';
 
 class ResolvesTest extends TestCase
 {
 
-    use TestableTrait;
+    private $container;
+
+    protected function setUp()
+    {
+        $this->container=new DIC();
+    }
 
     public function testBindInstance_usingInstanceInjection()
     {

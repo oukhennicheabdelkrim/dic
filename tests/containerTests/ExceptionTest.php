@@ -4,16 +4,24 @@
 namespace oukhennicheabdelkrim\DIC\tests\containerTests;
 
 use PHPUnit\Framework\TestCase;
-
 use oukhennicheabdelkrim\DIC\Definition\Exceptions\NoDefaultParams;
 use oukhennicheabdelkrim\DIC\Definition\Exceptions\NotFoundException;
 use oukhennicheabdelkrim\DIC\Definition\Exceptions\NotInstantiableExecption;
+use oukhennicheabdelkrim\DIC\DIC;
+
+require_once dirname(__DIR__).'/TestClass/bootstrap.php';
 
 
 
 class ExceptionTest extends  TestCase{
 
-    use TestableTrait;
+    private $container;
+
+    protected function setUp()
+    {
+        $this->container=new DIC();
+    }
+
 
     public function testNotFoundException()
     {
