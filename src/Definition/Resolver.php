@@ -20,16 +20,17 @@ class Resolver
      * @var CacheInstanceInterface
      */
     private $cacheInstance;
+
     /**
      * @var array
      */
-    private $resolvesRegister;
-
+    private $registeredResolves;
 
     /**
      * @var ContainerInterface
      */
     private $container;
+
 
     /**
      * Resolver constructor.
@@ -39,7 +40,7 @@ class Resolver
     public function __construct(CacheInstanceInterface $cacheInstance, ContainerInterface $container)
     {
         $this->cacheInstance = $cacheInstance;
-        $this->resolvesRegister = [];
+        $this->registeredResolves = [];
         $this->container = $container;
     }
 
@@ -67,13 +68,15 @@ class Resolver
     }
 
 
+
     /** register
      * @param $id
      * @param $resolve
      */
+
     public function register($id, $resolve)
     {
-        $this->resolvesRegister[$id] = $resolve;
+        $this->registeredResolves[$id] = $resolve;
     }
 
 
@@ -121,7 +124,7 @@ class Resolver
      */
     private function getResolve($id)
     {
-        return isset($this->resolvesRegister[$id]) ? $this->resolvesRegister[$id] : null;
+        return isset($this->registeredResolves[$id]) ? $this->registeredResolves[$id] : null;
     }
 
 
@@ -153,13 +156,14 @@ class Resolver
     }
 
     /**
+     * return resolve(callable) from real className
      * @param $className
      * @throws Exceptions\NotFoundException
      * @throws Exceptions\NotInstantiableExecption
-     * create resolve
+     * @return callable
      */
 
-    private function createResolve($className)
+    private function createResolve($className):callable
     {
 
         /** @var ReflectionClass $reflectionClass */
@@ -172,7 +176,8 @@ class Resolver
                     $reflectionParams = $reflectionClass->getConstructor()->getParameters();
                     foreach ($reflectionParams as $reflectionParam) {
                         $type = $reflectionParam->getType();
-                        if (isset($type)) $params[] = $this->resolve((string)$type);  #For php 7.0
+                        if (isset($type))
+                            $params[] = $this->resolve((string)$type);  #For php 7.0
                         else
                             $params[] = $this->getDefaultValue($reflectionParam, $className);
                     }

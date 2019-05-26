@@ -42,18 +42,18 @@ class resolveTest extends TestCase
     public function testHasForNotExsitingAlias()
     {
         $dic = new DIC();
-        $this->assertNotTrue($dic->has('myFoo'));
+        $this->assertFalse($dic->has('myFoo'));
     }
 
     public function testHasForInterface()
     {
         $dic = new DIC();
-        $this->assertNotTrue($dic->has('MyInterface'));
+        $this->assertFalse($dic->has('MyInterface'));
     }
 
     public function testHasForTrait()
     {
         $dic = new DIC();
-        $this->assertNotTrue($dic->has('Trait'));
+        $this->assertFalse($dic->has('Trait'));
     }
 }
