@@ -4,80 +4,76 @@
 namespace oukhennicheabdelkrim\DIC\tests\containerTests;
 
 
-use oukhennicheabdelkrim\DIC\DIC;
 use PHPUnit\Framework\TestCase;
+use oukhennicheabdelkrim\DIC\DIC;
 use C,Foo,Bar;
-
 require_once dirname(__DIR__).'/TestClass/bootstrap.php';
 
 class ResolvesTest extends TestCase
 {
 
-    private $container;
-
-    protected function setUp()
-    {
-        $this->container=new DIC();
-    }
 
     public function testBindInstance_usingInstanceInjection()
     {
-
-        $this->container->bind('bar_',new Bar(new Foo()));
-        $this->assertInstanceOf(Bar::class,$this->container->get('bar_'));
+        $dic = new DIC();
+        $dic->bind('bar_',new Bar(new Foo()));
+        $this->assertInstanceOf(Bar::class,$dic->get('bar_'));
 
     }
 
     public function testBindInstance_usingDicInjection()
     {
-        $this->container->bind('bar_',$this->container->get('Bar'));
-        $this->assertInstanceOf('Bar',$this->container->get('bar_'));
+        $dic = new DIC();
+        $dic->bind('bar_',$dic->get('Bar'));
+        $this->assertInstanceOf('Bar',$dic->get('bar_'));
 
     }
 
     public function testBindInstance_usingResolve()
     {
-        $this->container->bind('bar_',function (){
+        $dic = new DIC();
+        $dic->bind('bar_',function (){
             return new Bar(new Foo());
         });
-        $this->assertInstanceOf('Bar',$this->container->get('bar_'));
+        $this->assertInstanceOf('Bar',$dic->get('bar_'));
     }
 
 
     public function testBindInstance_usingResolveWithDic()
     {
-
-        $this->container->bind('bar_',function ($container){
-            return $container->get('Bar');
+        $dic = new DIC();
+        $dic->bind('bar_',function ($dic){
+            return $dic->get('Bar');
         });
-        $this->assertInstanceOf(Bar::class,$this->container->get('bar_'));
+        $this->assertInstanceOf(Bar::class,$dic->get('bar_'));
 
     }
 
 
     public function testBindInstnaceWithConstructWithOutParams()
     {
-
-        $this->container->bind('myCInstance',function ($container){
-            return $container->get('C');
+        $dic = new DIC();
+        $dic->bind('myCInstance',function ($dic){
+            return $dic->get('C');
         });
-        $this->assertInstanceOf(C::class,$this->container->get('myCInstance'));
+        $this->assertInstanceOf(C::class,$dic->get('myCInstance'));
     }
 
 
     public function testBindValue()
     {
-
-        $this->container->bind('a',5);
-        $this->assertEquals(5,$this->container->get('a'));
+        $dic = new DIC();
+        $dic->bind('a',5);
+        $this->assertEquals(5,$dic->get('a'));
     }
 
     public function testBindInstanceWithOutConstruct()
     {
-        $this->container->bind('F_Instnace',function (){
+        $dic = new DIC();
+        $dic->bind('F_Instnace',function (){
             return new C();
         });
-        $this->assertInstanceOf('C',$this->container->get('F_Instnace'));
+        $this->assertInstanceOf('C',$dic->get('F_Instnace'));
 
     }
 

@@ -11,74 +11,72 @@ require_once dirname(__DIR__).'/TestClass/bootstrap.php';
 class FactoryTest extends TestCase
 {
 
-    private $container;
-
-    protected function setUp()
-    {
-        $this->container=new DIC();
-    }
-
     public function testFactory()
     {
-        $bar1 = $this->container->getFactory('Bar');
-        $bar2 = $this->container->getFactory('Bar');
+        $dic  = new DIC();
+        $bar1 = $dic->getFactory('Bar');
+        $bar2 = $dic->getFactory('Bar');
         $this->assertNotEquals($bar1,$bar2);
     }
 
     public function testFactoryInjectionEqual_1()
     {
-        $foo = $this->container->get('Foo');
-        $bar = $this->container->getFactory('Bar');
+        $dic  = new DIC();
+        $foo = $dic->get('Foo');
+        $bar = $dic->getFactory('Bar');
         $this->assertEquals($foo,$bar->foo);
     }
 
     public function testFactoryInjectionEqual_2()
     {
-
-        $bar1 = $this->container->getFactory('Bar');
-        $bar2 = $this->container->getFactory('Bar');
+        $dic  = new DIC();
+        $bar1 = $dic->getFactory('Bar');
+        $bar2 = $dic->getFactory('Bar');
         $this->assertEquals($bar1->foo,$bar2->foo);
     }
 
 
     public function testSingletonAfterGettingFactory()
     {
-        $bar0 = $this->container->get('Bar');
-        $newbar = $this->container->getFactory('Bar');
-        $bar1 = $this->container->get('Bar');
+        $dic= new DIC();
+        $bar0 = $dic->get('Bar');
+        $newbar = $dic->getFactory('Bar');
+        $bar1 = $dic->get('Bar');
         $this->assertEquals($bar0,$bar1);
     }
 
     public function testFactoryByResolve_1()
     {
-
-        $this->container->bind('bar1',function ($container){
-            return new Bar($container->getFactory('Foo'));
+        $dic= new DIC();
+        $dic->bind('bar1',function ($dic){
+            return new Bar($dic->getFactory('Foo'));
         });
-        $this->assertNotEquals($this->container->getFactory('bar1'),$this->container->getFactory('bar1'));
+        $this->assertNotEquals($dic->getFactory('bar1'),$dic->getFactory('bar1'));
     }
 
     public function testFactoryByResolve_2()
     {
-
-        $this->container->bind('bar1',function ($container){
-            return new Bar($this->container->getFactory('Foo'));
+        $dic= new DIC();
+        $dic->bind('bar1',function ($dic){
+            return new Bar($dic->getFactory('Foo'));
         });
-        $this->assertNotEquals($this->container->getFactory('Bar'),$this->container->getFactory('bar1'));
+        $this->assertNotEquals($dic->getFactory('Bar'),$dic->getFactory('bar1'));
     }
 
     public function testFactoryByInstnaceInjection()
     {
+        $dic= new DIC();
         $foo = new Foo();
-        $this->container->bind('defaultFaut',$foo);
-        $this->assertNotEquals($foo,$this->container->getFactory('Foo'));
+        $dic->bind('defaultFaut',$foo);
+        $this->assertNotEquals($foo,$dic->getFactory('Foo'));
     }
 
     public function testFactoryByDicInstnaceInjection()
     {
-        $this->container->bind('foo1',$this->container->getFactory('Foo'));
-        $this->container->bind('foo2',$this->container->getFactory('Foo'));
-        $this->assertNotEquals($this->container->get('foo1'),$this->container->get('foo2'));
+        $dic= new DIC();
+        $dic->bind('foo1',$dic->getFactory('Foo'));
+        $dic->bind('foo2',$dic->getFactory('Foo'));
+        $this->assertNotEquals($dic->get('foo1'),$dic->get('foo2'));
     }
 
 }

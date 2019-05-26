@@ -12,49 +12,45 @@ require_once dirname(__DIR__).'/TestClass/bootstrap.php';
 
 class resolveTest extends TestCase
 {
-    private $container;
-
-    protected function setUp()
-    {
-        $this->container=new DIC();
-    }
-
     public function testHasForExistingClass()
     {
-
-        $this->assertTrue($this->container->has('Foo'));
+        $dic = new DIC();
+        $this->assertTrue($dic->has('Foo'));
     }
 
     public function testHasForExistingAliasByInstanceInjection()
     {
-        $this->container->bind('myFoo', new Foo());
-        $this->assertTrue($this->container->has('myFoo'));
+        $dic = new DIC();
+        $dic->bind('myFoo', new Foo());
+        $this->assertTrue($dic->has('myFoo'));
     }
 
 
     public function testHasForExistingAliasByResolve()
     {
-
-        $this->container->bind('myFoo', function ($container) {
-            return $container->get('Foo');
+        $dic = new DIC();
+        $dic->bind('myFoo', function ($dic) {
+            return $dic->get('Foo');
         });
-        $this->assertTrue($this->container->has('myFoo'));
+
+        $this->assertTrue($dic->has('myFoo'));
     }
 
     public function testHasForNotExsitingAlias()
     {
-
-        $this->assertFalse($this->container->has('myFoo'));
+        $dic = new DIC();
+        $this->assertFalse($dic->has('myFoo'));
     }
 
     public function testHasForInterface()
     {
-        $this->assertFalse($this->container->has('MyInterface'));
+        $dic = new DIC();
+        $this->assertFalse($dic->has('MyInterface'));
     }
 
     public function testHasForTrait()
     {
-
-        $this->assertFalse($this->container->has('Trait'));
+        $dic = new DIC();
+        $this->assertFalse($dic->has('Trait'));
     }
 }

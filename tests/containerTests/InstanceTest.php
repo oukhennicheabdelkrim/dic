@@ -13,103 +13,107 @@ require_once dirname(__DIR__).'/TestClass/bootstrap.php';
 
 class InstanceTest  extends TestCase
 {
-    private $container;
-
-    protected function setUp()
-    {
-        $this->container=new DIC();
-    }
-
     public function testInstanceOf()
     {
-        $bar=$this->container->get('Bar');
+        $dic= new DIC();
+        $bar=$dic->get('Bar');
         $this->assertInstanceOf('Bar',$bar);
     }
 
 
     public function testInstanceOfByAlias()
     {
-        $this->container->bind('myBar',function ($container){
-            return new Bar($container->get('Foo'));
+        $dic= new DIC();
+
+        $dic->bind('myBar',function ($dic){
+            return new Bar($dic->get('Foo'));
         });
-        $this->assertInstanceOf('Bar',$this->container->get('myBar'));
+        $this->assertInstanceOf('Bar',$dic->get('myBar'));
 
     }
 
     public function testInstanceOfByInjection()
     {
+        $dic= new DIC();
         $foo = new Foo();
-        $this->container->bind('myFoo',$foo);
-        $this->assertInstanceOf('Foo',$this->container->get('myFoo'));
+        $dic->bind('myFoo',$foo);
+        $this->assertInstanceOf('Foo',$dic->get('myFoo'));
     }
 
     public function testInstanceOfByResolve()
     {
-        $this->container->bind('myFoo',function ($container){
-            return $container->get('Foo');
+        $dic= new DIC();
+        $dic->bind('myFoo',function ($dic){
+            return $dic->get('Foo');
         });
-        $this->assertInstanceOf('Foo',$this->container->get('myFoo'));
+        $this->assertInstanceOf('Foo',$dic->get('myFoo'));
     }
 
     public function testEqualByInjection()
     {
+        $dic= new DIC();
         $foo = new Foo();
-        $this->container->bind('myfoo',$foo);
-        $this->assertEquals($foo,$this->container->get('myfoo'));
+        $dic->bind('myfoo',$foo);
+        $this->assertEquals($foo,$dic->get('myfoo'));
     }
 
 
 
     public function testSingletonInstance1()
     {
-        $bar=$this->container->get('Bar');
-        $this->assertEquals($bar->foo,$this->container->get('Foo'));
+        $dic= new DIC();
+        $bar=$dic->get('Bar');
+        $this->assertEquals($bar->foo,$dic->get('Foo'));
 
     }
 
     public function testSingletonInstance2()
     {
-        $id=$this->container->get('Bar')->id;
-        $this->assertEquals($id,$this->container->get('Bar')->id);
+        $dic= new DIC();
+        $id=$dic->get('Bar')->id;
+        $this->assertEquals($id,$dic->get('Bar')->id);
     }
 
     public function testSingletonByAlias()
     {
-
-        $this->container->bind('myFoo',function (){
+        $dic= new DIC();
+        $dic->bind('myFoo',function (){
             return new Foo();
 
-        })->bind('MyBar',function ($container){
+        })->bind('MyBar',function ($dic){
 
-            return new Bar($container->get('myFoo'));
+            return new Bar($dic->get('myFoo'));
         });
 
-        $foo = $this->container->get('myFoo');
+        $foo = $dic->get('myFoo');
 
-        $this->assertEquals($foo,$this->container->get('MyBar')->foo);
+        $this->assertEquals($foo,$dic->get('MyBar')->foo);
 
     }
 
     public function testInitParams()
     {
-        $this->assertEquals(44,$this->container->get('Bar')->foo->input);
+        $dic= new DIC();
+        $this->assertEquals(44,$dic->get('Bar')->foo->input);
     }
 
 
     public function testInstanceWithOutConstuct()
     {
-        $this->assertInstanceOf('C',$this->container->get('C'));
+        $dic= new DIC();
+        $this->assertInstanceOf('C',$dic->get('C'));
+
     }
 
 
 
     /****************
 
-      A
+    A
     |   |
     B   C
     |
-     D
+    D
     | |
     E C
 
@@ -119,15 +123,19 @@ class InstanceTest  extends TestCase
 
     public function testDeepResolveSingleton1()
     {
-        $a = $this->container->get('A');
-        $this->assertEquals($a->b->d->c,$this->container->get('C'));
+        $dic= new DIC();
+        $a = $dic->get('A');
+        $this->assertEquals($a->b->d->c,$dic->get('C'));
 
     }
 
 
+
+
     public function testDeepResolveSingleton2()
     {
-        $a = $this->container->get('A');
+        $dic= new DIC();
+        $a = $dic->get('A');
         $this->assertEquals($a->b->d->c,$a->c);
 
     }
@@ -135,17 +143,18 @@ class InstanceTest  extends TestCase
 
     public function testDeepResolveSingleton3()
     {
-        $a = $this->container->get('A');
-        $this->assertEquals($a->b->d,$this->container->get('B')->d);
+        $dic= new DIC();
+        $a = $dic->get('A');
+        $this->assertEquals($a->b->d,$dic->get('B')->d);
     }
 
 
     public function testDeepResolveFactory()
     {
-        $a = $this->container->get('A');
-        $this->assertFalse($a===$this->container->getFactory('A'));
+        $dic= new DIC();
+        $a = $dic->get('A');
+        $this->assertNotTrue($a===$dic->getFactory('A'));
     }
-
 
 
 
