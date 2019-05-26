@@ -5,6 +5,9 @@ namespace oukhennicheabdelkrim\DIC\Definition;
 
 use oukhennicheabdelkrim\DIC\Definition\Exceptions;
 use Psr\Container\ContainerInterface;
+use ReflectionParameter;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class Resolver
@@ -18,9 +21,9 @@ class Resolver
      */
     private $cacheInstance;
     /**
-     * @var
+     * @var array
      */
-    private $registredResolveStore;
+    private $resolvesRegister;
 
 
     /**
@@ -36,30 +39,30 @@ class Resolver
     public function __construct(CacheInstanceInterface $cacheInstance, ContainerInterface $container)
     {
         $this->cacheInstance = $cacheInstance;
-        $this->registredResolveStore = [];
+        $this->resolvesRegister = [];
         $this->container = $container;
     }
 
-    /**********************************************************************************
-
-     -> Public methods
 
     /**********************************************************************************
-
      *
+     * -> Public methods
+     *
+     * **********************************************************************************/
+
+
     /**
      * Resolve
      * @param $id
-     * @param bool $inResolves
+     * @param bool $cached
      * return mixed (instance)
-     * @throws NotFoundException
+     *
      */
-
     public function resolve($id, $cached = true)
     {
         $resolve = $this->getResolve($id);
-        if ($resolve!==null) return $this->resolveRegistered($id, $cached);
-        $this->register($id,$this->createResolve($id));
+        if ($resolve !== null) return $this->resolveRegistered($id, $cached);
+        $this->register($id, $this->createResolve($id));
         return $this->resolveRegistered($id, $cached);
     }
 
@@ -67,11 +70,10 @@ class Resolver
     /** register
      * @param $id
      * @param $resolve
-     * @param bool $singleton
      */
     public function register($id, $resolve)
     {
-        $this->registredResolveStore[$id] = $resolve;
+        $this->resolvesRegister[$id] = $resolve;
     }
 
 
@@ -82,24 +84,17 @@ class Resolver
     public function canResolve($id): bool
     {
         $resolve = $this->getResolve($id);
-        if (isset($resolve)) {
-            return true;
-        } else {
-            $reflectionClass = $this->getReflectionCalss($id);
-            return $reflectionClass !== null && $this->isInstanciable($reflectionClass);
-        }
-
+        if (isset($resolve)) return true;
+        $reflectionClass = $this->getReflectionCalss($id);
+        return $reflectionClass !== null && $this->isInstanciable($reflectionClass);
     }
 
 
-
-
     /**********************************************************************************
-
-    -> Private methods
-
-    /**********************************************************************************
-
+     *
+     * -> Private methods
+     *
+     ***********************************************************************************/
 
     /**
      * @param $id
@@ -122,11 +117,11 @@ class Resolver
 
     /**
      * @param $id
-     * @return resolve or null if resolve is not registered
+     * @return 'the resolve' or null if resolve is not registered
      */
     private function getResolve($id)
     {
-        return isset($this->registredResolveStore[$id]) ? $this->registredResolveStore[$id] : null;
+        return isset($this->resolvesRegister[$id]) ? $this->resolvesRegister[$id] : null;
     }
 
 
@@ -145,16 +140,14 @@ class Resolver
      * @param $fromCache
      * @return mixed
      */
-    private function resolveRegistered(string $id, $fromCache)
+    private function resolveRegistered(string $id, bool $fromCache)
     {
 
         $resolve = $this->getResolve($id);
         if ($fromCache) {
-            if (!$this->isInCacheInstancies($id))
-                $this->setInCacheInstancies($id, $this->getNewInstance($resolve));
+            if (!$this->isInCacheInstancies($id)) $this->setInCacheInstancies($id, $this->getNewInstance($resolve));
             return $this->getInstanceFromCache($id);
-        }
-        else
+        } else
             return $this->getNewInstance($resolve);
 
     }
@@ -166,9 +159,10 @@ class Resolver
      * create resolve
      */
 
-    private function createResolve($className){
+    private function createResolve($className)
+    {
 
-        /** @var \ReflectionClass $reflectionClass */
+        /** @var ReflectionClass $reflectionClass */
         $reflectionClass = $this->getReflectionCalss($className);
         if ($reflectionClass !== null) {
             if ($this->isInstanciable($reflectionClass)) {
@@ -178,10 +172,9 @@ class Resolver
                     $reflectionParams = $reflectionClass->getConstructor()->getParameters();
                     foreach ($reflectionParams as $reflectionParam) {
                         $type = $reflectionParam->getType();
-                        if (isset($type))
-                            $params[] = $this->resolve((string)$type);  #For php 7.0
+                        if (isset($type)) $params[] = $this->resolve((string)$type);  #For php 7.0
                         else
-                            $params[] = $this->getDefaultValue($reflectionParam,$className);
+                            $params[] = $this->getDefaultValue($reflectionParam, $className);
                     }
                 }
                 return function () use ($reflectionClass, $params) {
@@ -204,23 +197,22 @@ class Resolver
     private function getReflectionCalss($className)
     {
         try {
-            return new \ReflectionClass($className);
-        } catch (\ReflectionException $e) {
+            return new ReflectionClass($className);
+        } catch (ReflectionException $e) {
             return null;
         }
 
     }
 
     /**
-     * @param \ReflectionParameter $p
+     * @param ReflectionParameter $p
      * @param $className
      * @return mixed
      * @throws Exceptions\NoDefaultParams
      */
-    private function getDefaultValue (\ReflectionParameter $p, $className)
+    private function getDefaultValue(ReflectionParameter $p, $className)
     {
-        if ($p->isDefaultValueAvailable())
-            return $p->getDefaultValue();
+        if ($p->isDefaultValueAvailable()) return $p->getDefaultValue();
 
         throw new Exceptions\NoDefaultParams("DIC Instantiation error :Can not found default value of '{$p->getName()}' parameter in constructor of '$className'.");
 
@@ -228,10 +220,10 @@ class Resolver
 
 
     /**
-     * @param \ReflectionClass $reflectionClass
+     * @param  ReflectionClass $reflectionClass
      * @return bool
      */
-    private function isInstanciable(\ReflectionClass $reflectionClass)
+    private function isInstanciable(ReflectionClass $reflectionClass): bool
     {
         return $reflectionClass->isInstantiable();
     }
@@ -243,11 +235,7 @@ class Resolver
      */
     private function getNewInstance($resolve)
     {
-        if (is_callable($resolve)) {
-            return $resolve($this->container);
-        } else {
-            return $resolve;
-        }
+        return is_callable($resolve) ? $resolve($this->container) : $resolve;
     }
 
 

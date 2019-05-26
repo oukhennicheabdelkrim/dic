@@ -2,11 +2,10 @@
 
 namespace oukhennicheabdelkrim\DIC;
 
+use Psr\Container\ContainerInterface;
 use oukhennicheabdelkrim\DIC\Definition\CacheInstance;
 use oukhennicheabdelkrim\DIC\Definition\Resolver;
 
-
-use Psr\Container\ContainerInterface;
 
 
 /**
@@ -26,7 +25,6 @@ class DIC implements ContainerInterface
      */
     public function __construct()
      {
-
          $this->resolver = new Resolver(new CacheInstance(),$this);
      }
 
