@@ -16,7 +16,7 @@ trait TestableTrait
 
     public $container;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->container=new DIC();
     }
