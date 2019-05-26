@@ -22,6 +22,12 @@
 
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "oukhennicheabdelkrim\\DIC\\tests\\":"tests/"
+        }
+
+    },
 
 
     "license":"MIT"
