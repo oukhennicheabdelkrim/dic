@@ -16,6 +16,7 @@ The following versions of PHP are supported in this version:
 
 - PHP 7.0
 - PHP 7.1
+- PHP 7.2
 
 ## Testing    
 

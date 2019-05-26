@@ -179,7 +179,7 @@ class Resolver
                     foreach ($reflectionParams as $reflectionParam) {
                         $type = $reflectionParam->getType();
                         if (isset($type))
-                            $params[] = $this->resolve($type->getName());
+                            $params[] = $this->resolve((string)$type);  #For php 7.0
                         else
                             $params[] = $this->getDefaultValue($reflectionParam,$className);
                     }
@@ -219,12 +219,11 @@ class Resolver
      */
     private function getDefaultValue (\ReflectionParameter $p, $className)
     {
-        try{
+        if ($p->isDefaultValueAvailable())
             return $p->getDefaultValue();
-        }
-        catch (\ReflectionException $e){
-            throw new Exceptions\NoDefaultParams("DIC Instantiation error :Can not found default value of '{$p->getName()}' parameter in constructor of '$className'.");
-        }
+
+        throw new Exceptions\NoDefaultParams("DIC Instantiation error :Can not found default value of '{$p->getName()}' parameter in constructor of '$className'.");
+
     }
 
 
