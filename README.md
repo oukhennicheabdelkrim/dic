@@ -31,7 +31,7 @@ $ vendor/bin/phpunit
 composer require oukhennicheabdelkrim/dic
 ````
 ### Simple usage 
-To create a container, simply create an instance of the DIC class.
+To create a container, simply create an instance of the ```DIC``` class.
 
 ```
 <?php
@@ -50,18 +50,19 @@ You can bind any object with a key using ```bind``` method ,then you can retriev
 <?php
 
 $container = new DIC();
+//Bind myFoo to the Foo instance
 $container->bind('myFoo',function(){
     return new Foo();
 });
 
-$myFoo = $container->get('myFoo');
+$myFoo = $container->get('myFoo'); // Foo instance
 
-````
-**Note** : bind method returns the current container.
+```
+**Note** : ```bind``` method returns the current container.
 
-````get```` method creates a singleton instance by default, this means everytime you request a dependency it returns the same instance.
+```get``` method creates a singleton instance by default, this means everytime you request a dependency it returns the same instance.
 
-````
+```
  $container = new DIC();
  $container->bind('myFoo',function(){
     return new Foo();
@@ -74,18 +75,17 @@ Within any of your resolve callable, you always have access to the ```$container
 
 ```
 $container = new DIC();
-
-$container->bind('config',function(){
+$container->bind('config.db',function(){
     return new DbConfig();
 });
-
 $container->bind('dbConnection',function($container){
-    return new DbConnection($container->get('config'));
+    return new DbConnection($container->get('config.db'));
 });
 
-// $container->get('dbConnection') : get a singleton DbConnection
+//Get a singleton DbConnection instance
+$dbConnection=$container->get('dbConnection');
 
-`````
+```
 
 
 You can also directly inject instance to bind it:
@@ -95,7 +95,7 @@ You can also directly inject instance to bind it:
 ```
 
 ## Get a new instance 
-You can also get a new instance using ```getFactory``` method
+You can get a **new instance** using ```getFactory``` method
 ```
  $container = new DIC();
  $container->bind('myFoo',function(){
@@ -109,7 +109,7 @@ You can also get a new instance using ```getFactory``` method
 ```
 ## Resolving instance automatically
 
-DIC can resolve any instantiable class without ```bind``` method, using the real ```class:name``` as an argument in ```get``` and ```getFactory``` methods
+DIC can resolve any instantiable class without ```bind``` method, using the real class:name as an argument in ```get``` and ```getFactory``` methods
 
 ##### Example 1
 ```
@@ -133,8 +133,7 @@ $bar=$container->get('Bar');
 
 var_dump($bar->foo->i); // 44
 
-//get method always returns a singleton instance.
-
+// get method always returns a singleton instance.
 var_dump($bar->foo === $container->get('Foo')); //  true
 
 //getFactory method always returns a new instance.
@@ -146,16 +145,13 @@ var_dump($bar->foo === $container->getFactory('Foo')); // false
 $container = new DIC();
 
 $container->bind('bar1',function($container){
-    // resolve Foo using class name
+    // resolve Foo using the class name
     return new Bar($container->get('Foo'));
 });
 
-$bar1 = $container->get('bar1');//singleton bar1
-
-$bar  = $container->get('Bar'); //singleton Bar
-
+$bar1 = $container->get('bar1');// a singleton bar1 (Bar instance)
+$bar  = $container->get('Bar'); // a singleton Bar
 var_dump($bar1 === $bar);  // false
-
 var_dump($bar1->foo === $bar->foo) ; // true
 
 ```
@@ -167,11 +163,10 @@ $container = new DIC();
 
 $container->bind('a',5);
 var_dump($container->get('a')); // 5
-$container->bind('db.config',function(){
-        $config = new Config(); // We can Also use $container->get('Config')
+$container->bind('db.config',function(){        
+        $config = new Config(); // We can Also use $container->get('Config')      
         return $config->getArray('db'); // Array of database configuration
-})
-->bind('dbConnexion',function($container){
+})->bind('dbConnexion',function($container){     
         return new DbConnexion($container->get('db.config'));
 });
 
@@ -179,18 +174,19 @@ var_dump($container->get('db.config')); //  Array of database configuration
 var_dump($container->get('dbConnexion')); // singleton dbConnexion instance
 
 ```
-**Note** : Since bind method return the current container, you can chain the binding process.
+**Note** : Since ```bind``` method return the current container, you can chain the binding process.
 
 ##### Example:
 ```
 $myBar = $container->bind('myFoo',new Foo())
-          ->bind('myBar',new Bar($container->get('myFoo'))->get('myBar');          
+          ->bind('myBar',new Bar($container->get('myFoo'))
+          ->get('myBar');          
             
 ```
 
 ## has method
 
-```has``` method returns true if the container can return an entry for the given identifier, returns false otherwise.
+```has``` method returns ```true``` if the container can return an entry for the given identifier, returns ```false``` otherwise.
 ```
 /* A class */
 class A{
