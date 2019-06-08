@@ -176,7 +176,7 @@ class Resolver
                     $reflectionParams = $reflectionClass->getConstructor()->getParameters();
                     foreach ($reflectionParams as $reflectionParam) {
                         $type = $reflectionParam->getType();
-                        if (isset($type))
+                        if (isset($type)&&!$this->canBeWithDefaultValue($type))
                             $params[] = $this->resolve((string)$type);  #For php 7.0
                         else
                             $params[] = $this->getDefaultValue($reflectionParam, $className);
@@ -241,6 +241,16 @@ class Resolver
     private function getNewInstance($resolve)
     {
         return is_callable($resolve) ? $resolve($this->container) : $resolve;
+    }
+
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    private function canBeWithDefaultValue(string $type):bool
+    {
+        return in_array($type,['int','float','string','array','iterable','bool']);
     }
 
 
