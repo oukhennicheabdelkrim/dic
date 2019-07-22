@@ -117,7 +117,7 @@ DIC can resolve any instantiable class without ```bind``` method, using the real
 class Foo{
   public $i;
   public function __construct($i = 44){
-      $this->i=44;
+      $this->i=$i;
   }
 }
 /* Bar class */
